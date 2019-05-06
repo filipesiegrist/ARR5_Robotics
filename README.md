@@ -33,4 +33,10 @@ $git add <caminho/do(s)/arquivo(s)>
 
 $git commit -m "Mensagem descrevendo sua alteração"
 
-Tente fazer alguns commits para pequenas alterações.
+Tente fazer commits para pequenas alterações. Vários commits para uma pull request.
+
+Quando terminar o seu trabalho na branch, use o seguinte comando:
+
+$git push origin feature/<nomebranch>
+
+Coloque login e senha do github e espere submeter. Suas alterações aparecerão no site. Lá você terá que criar uma pull request para o develop. 
