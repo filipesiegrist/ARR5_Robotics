@@ -1,3 +1,10 @@
+%
+% @Author: Filipe Ernesto Siegrist Gonçalves
+% @Date:   2019-05-12 22:46:15
+% @Last Modified by:   filipe-ufsc
+% @Last Modified time: 2019-05-12 22:46:15
+%
+
 % Cinemática direta simples.
 
 function [pwx,pwy,pwz] = Dir_ARR5(d1,a1,a2,a3,th_1,th_2,th_3)
