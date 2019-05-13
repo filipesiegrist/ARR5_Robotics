@@ -11,7 +11,7 @@ function [pwx,pwy,pwz] = Dir_ARR5(d1,a1,a2,a3,th_1,th_2,th_3)
 	c23 = cos(th_2 + th_3);
 	s23 = sin(th_2 + th_3);
 
-	pwx = c1*(a3 + a3*c23 + a2*c2);
-	pwy = s1*(a3 + a3*c23 + a2*c2);
+	pwx = c1*(a1 + a3*c23 + a2*c2);
+	pwy = s1*(a1 + a3*c23 + a2*c2);
 	pwz = d1 + a3*s23 + a2*s2;
 endfunction
