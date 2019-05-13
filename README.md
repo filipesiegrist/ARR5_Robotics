@@ -1,5 +1,23 @@
 # ARR5_Robotics
 
+## Autores:
+- Emili Bohrer
+- Filipe Gonçalves
+- Matheus Souza
+- Paulo Duarte
+- Ramon Martins
+
+## Descrição do projeto:
+- Modelagem geométrica do manipulador ARR5 da Arducore (link: https://www.arducore.com.br/arr5-braco-robotico)
+- Este robô é em sua essência um braço antropomórfico, manipulador que tem as suas cinemáticas, direta e inversa, resolvidas por Siciliano et al. (Robotics: Modelling, Planning and Control, 2010).
+- Tendo como base as equações do braço antropomórfico, estas foram modificadas de forma a:
+	- Considerar o ligeiro deslocamento lateral que o ARR5 contém, entre os eixos Z's da primeira e segunda juntas.
+	- Descrever o ponto geométrico em relação à base do manipulador (as equações anteriores descreviam o ponto em relação ao primeiro elo, apenas).
+- As funções de cinemática direta e inversa estão implementadas na pasta matlab_codes. Elas podem ser passadas, com relativa tranquilidade, para uma linguagem de programação embarcada, como o C (Arduino).
+- Além destas, temos um arquivo matlab com os testes das duas funções. Nele as coordenadas do objetivo são impostas, a cinemática inversa trata de encontrar os parâmetros de junta para alcançá-lo e a cinemática inversa se certifica que houve sucesso.
+- Os dados geométricos do robô, para fins de praticidade na simulação, foram aproximados. 
+
+
 ## Comandos para usar o git:
 
 ## Inicializar:
