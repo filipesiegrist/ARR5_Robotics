@@ -7,14 +7,14 @@
 
 
 function [th_1,th_2,th_3] = Inv_ARR5 (d1,a1,a2,a3,pwx,pwy,pwz)
-	% Mudanca de variavel: descontando o valor de a1.
-	pwh = sqrt(pwx^2+pwy^2) - a1
+    % Mudanca de variavel: descontando o valor de a1.
+    pwh = sqrt(pwx^2+pwy^2) - a1
 
-	% Outra mudança: Acha um pwz alternativo, descontando a altura do robô
-	pwz0 = pwz;
-	pwz = pwz - d1
+    % Outra mudança: Acha um pwz alternativo, descontando a altura do robô
+    pwz0 = pwz;
+    pwz = pwz - d1
 
-	c3 = (pwh^2 + pwz^2 - a2^2 - a3^2) / (2*a2*a3);
+    c3 = (pwh^2 + pwz^2 - a2^2 - a3^2) / (2*a2*a3);
     assert(c3 <= 1 && c3 >= -1, "Erro: Fora do espaço de trabalho do robo.");
     s3 = sqrt(1-c3^2); % pode ser negativo
     th_3 = atan2(s3,c3);
