@@ -1,3 +1,9 @@
+%
+% @Author: Filipe Ernesto Siegrist Gonçalves
+% @Date:   2019-05-12 23:39:39
+% @Last Modified by:   filipe-ufsc
+% @Last Modified time: 2019-05-12 23:39:39
+%
 clear;
 warning('off','all');
 
