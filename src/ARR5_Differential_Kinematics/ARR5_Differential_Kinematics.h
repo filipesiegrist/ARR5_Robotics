@@ -1,0 +1,4 @@
+#ifndef ARR5_DIFFERENTIAL_KINEMATICS_H__
+#define ARR5_DIFFERENTIAL_KINEMATICS_H__
+
+#endif /* end of include guard: ARR5_DIFFERENTIAL_KINEMATICS_H__ */
