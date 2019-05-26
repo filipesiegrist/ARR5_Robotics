@@ -1,0 +1,17 @@
+Direct = (sym 4╫4 matrix)                                                                                    
+                                                                                                             
+  ⎡c₁⋅c₂₃  -c₁⋅s₂₃  -s₁  c₁⋅(a₁ + a₂⋅c₂ + a₃⋅c₂₃)⎤
+  ⎢                                              ⎥            
+  ⎢c₂₃⋅s₁  -s₁⋅s₂₃  c₁   s₁⋅(a₁ + a₂⋅c₂ + a₃⋅c₂₃)⎥            
+  ⎢                                              ⎥            
+  ⎢ -s₂₃    -c₂₃     0     -a₂⋅s₂ - a₃⋅s₂₃ + d₁  ⎥            
+  ⎢                                              ⎥            
+  ⎣  0        0      0              1            ⎦            
+                                                                                                             
+Objective = (sym 3╫1 matrix)                                                                                 
+                                                                                                             
+  ⎡c₁⋅(a₁ + a₂⋅c₂ + a₃⋅c₂₃)⎤                                  
+  ⎢                        ⎥                                                        
+  ⎢s₁⋅(a₁ + a₂⋅c₂ + a₃⋅c₂₃)⎥                                                        
+  ⎢                        ⎥                                                        
+  ⎣  -a₂⋅s₂ - a₃⋅s₂₃ + d₁  ⎦                                        
