@@ -10,16 +10,13 @@
 
 typedef angle_t float;
 typedef distance_t float;
+typedef  enum{JOINT_1,JOINT_2,JOINT_3}joints_t;
 
 typedef struct position {
     distance_t x;
     distance_t y;
     distance_t z;
 } position_t;
-
-position_t direct_kinematics(angle_t a1,angle_t a2,angle_t a3) {
-    
-}
 
 
 #endif /* end of include guard: ARR5_DATA_H__ */
