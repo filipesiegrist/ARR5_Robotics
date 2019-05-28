@@ -8,4 +8,15 @@
 #ifndef ARR5_DATA_H__
 #define ARR5_DATA_H__
 
+typedef angle_t float;
+typedef distance_t float;
+typedef  enum{JOINT_1,JOINT_2,JOINT_3}joints_t;
+
+typedef struct position {
+    distance_t x;
+    distance_t y;
+    distance_t z;
+} position_t;
+
+
 #endif /* end of include guard: ARR5_DATA_H__ */
