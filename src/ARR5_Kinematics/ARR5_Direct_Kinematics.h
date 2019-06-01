@@ -8,8 +8,9 @@
 #ifndef ARR5_DIRECT_KINEMATICS_H__
 #define ARR5_DIRECT_KINEMATICS_H__
 
+#include <math.h>
 #include "../ARR5_Data.h"
 
-position_t direct_kinematics(angle_t a1, angle_t a2,angle_t a3, distance_t d1);
+position_t direct_kinematics(distance_t a1, distance_t a2,distance_t a3, distance_t d1, angle_t theta_1, angle_t theta_2, angle_t theta_3);
 
 #endif /* end of include guard: ARR5_DIRECT_KINEMATICS_H__ */
