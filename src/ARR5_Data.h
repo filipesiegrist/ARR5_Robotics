@@ -8,9 +8,9 @@
 #ifndef ARR5_DATA_H__
 #define ARR5_DATA_H__
 
-typedef angle_t float;
-typedef distance_t float;
-typedef  enum{JOINT_1,JOINT_2,JOINT_3}joints_t;
+typedef float angle_t;
+typedef float distance_t;
+typedef  enum{JOINT_1,JOINT_2,JOINT_3} joints_t;
 
 typedef struct position {
     distance_t x;
