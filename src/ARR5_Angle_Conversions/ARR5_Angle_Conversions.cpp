@@ -2,7 +2,7 @@
 * @Author: Filipe Ernesto Siegrist Gonçalves
 * @Date:   2019-05-26 16:48:02
 * @Last Modified by:   filipe-ufsc
-* @Last Modified time: 2019-06-01 20:50:33
+* @Last Modified time: 2019-06-01 21:05:33
 */
 #ifndef ARR5_ANGLE_CONVERSIONS_CPP__
 #define ARR5_ANGLE_CONVERSIONS_CPP__
@@ -10,7 +10,7 @@
 #include "../ARR5_Data.h"
 
 int fromJointToServoBase(angle_t baseAngle) {
-	return (int) (baseAngle - 89);
+	return (int) (baseAngle + 89);
 }
 
 int fromJointToServoShoulder(angle_t shoulderAngle) {
