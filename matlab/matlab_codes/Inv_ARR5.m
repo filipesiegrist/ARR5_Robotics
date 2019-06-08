@@ -28,7 +28,7 @@ function [th_1,th_2,th_3] = Inv_ARR5 (d1,a1,a2,a3,pwx,pwy,pwz)
     b = atan2(pwz,pwh);
 
     % theta2 = psi +/- beta
-    th_2 = b - p; % Pode ser uma subtração também.
+    th_2 = b - p; % Pode ser uma adição também.
 
     th_1 = atan2(pwy,pwx);
 
