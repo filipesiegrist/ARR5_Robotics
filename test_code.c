@@ -8,7 +8,6 @@ int main(void) {
 
 	// Main para teste do código
 
-	angle_t theta_1, theta_2, theta_3;
 	distance_t a1, a2, a3, d1;
 	position_t pos;
 	robot_angles_t angles;
@@ -21,9 +20,9 @@ int main(void) {
 	d1 = 85;
 	
 	// Ponto que quero alcancar
-	distance_t objetivo_x = 60;
-	distance_t objetivo_y = 20;
-	distance_t objetivo_z = 60;
+	distance_t objetivo_x = 0;
+	distance_t objetivo_y = 0;
+	distance_t objetivo_z = 0;
 
 	pos.x = objetivo_x;
 	pos.y = objetivo_y;
