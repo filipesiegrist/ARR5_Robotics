@@ -15,8 +15,8 @@ typedef  enum{JOINT_1,JOINT_2,JOINT_3} joints_t;
 
 // Se quero o cotovelo pra cima, uso 1, senao uso -1.
 typedef enum basic_orientation{
-	ELBOW_UP = 1,
-	ELBOW_DOWN = -1
+	ELBOW_UP = -1,
+	ELBOW_DOWN = 1
 } basic_orientation_t;
 
 typedef struct position {
