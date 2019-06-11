@@ -1,5 +1,5 @@
-#ifndef ARR5_JOINT_LIMITS
-#define ARR5_JOINT_LIMITS
+#ifndef __ARR5_JOINT_LIMITS__
+#define __ARR5_JOINT_LIMITS__
 
 /*
 
