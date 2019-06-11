@@ -8,8 +8,8 @@
 #ifndef ARR5_DATA_H__
 #define ARR5_DATA_H__
 
-typedef float angle_t;
-typedef float distance_t;
+typedef int angle_t;
+typedef int distance_t;
 
 typedef  enum{JOINT_1,JOINT_2,JOINT_3} joints_t;
 
