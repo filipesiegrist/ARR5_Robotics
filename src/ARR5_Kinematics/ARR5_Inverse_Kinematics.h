@@ -12,6 +12,8 @@
 #include "../ARR5_Data.h"
 #include "../ARR5_Angle_Conversions/degreesRadiansConversions.h"
 
+distance_t SQ(distance_t X);
+
 robot_angles_t inverse_kinematics(distance_t d1, distance_t a1, distance_t a2, distance_t a3, position_t point, basic_orientation_t elbow_up_or_down);
 
 /*
