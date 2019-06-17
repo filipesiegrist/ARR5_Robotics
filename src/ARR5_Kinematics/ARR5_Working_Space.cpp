@@ -26,7 +26,7 @@ bool is_point_on_working_space(distance_t d1, distance_t a1, distance_t a2, dist
     
 
     float c3 = (SQ(pwh) + SQ(pwz) - SQ(a2) - SQ(a3)) / (2*a2*a3);
-	if(c3>1)return false;
+	if(c3>1 || c3<-1)return false;
     //Verificar se o cosseno esta entre menos um e um!
 
     float s3 = sqrt(abs(1-SQ(c3)))*elbow_up_or_down; // pode ser negativo
@@ -34,7 +34,7 @@ bool is_point_on_working_space(distance_t d1, distance_t a1, distance_t a2, dist
 
 
     float cphi = (SQ(pwh) + SQ(pwz) + SQ(a2) - SQ(a3)) / (2*a2*sqrt(SQ(pwh)+SQ(pwz)));
-	if(cphi>1)return false;
+	if(cphi>1 || cphi<-1)return false;
     //Verificar se o cosseno esta entre menos um e um!
 
     if(cphi>1)cphi=1;
