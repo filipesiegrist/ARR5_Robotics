@@ -49,6 +49,11 @@ bool is_point_on_working_space(distance_t d1, distance_t a1, distance_t a2, dist
 	angles_out.theta_2 = th_2;
 	angles_out.theta_3 = th_3;
 
+    if(th_1 > MAX_ANGLE_1 || th_1 < MIN_ANGLE_1)return false;
+    if(th_2 > MAX_ANGLE_2 || th_2 < MIN_ANGLE_2)return false;
+    if(th_3 > MAX_ANGLE_3 || th_3 < MIN_ANGLE_3)return false;
+
+    cout << "pwh = " << pwh << endl;
     cout << "pwz0 = " << pwz1 << endl;
     cout << "pwz = " << pwz << endl;
     cout << "c3 = " << c3 << endl;
@@ -63,26 +68,6 @@ bool is_point_on_working_space(distance_t d1, distance_t a1, distance_t a2, dist
     cout << "a_th_1 = " << th_1 << endl;
     cout << "a_th_2 = " << th_2 << endl;
     cout << "a_th_3 = " << th_3 << endl;	
-
-	if(th_1 > MAX_ANGLE_1 || th_1 < MIN_ANGLE_1)return false;
-    if(th_2 > MAX_ANGLE_2 || th_2 < MIN_ANGLE_2)return false;
-    if(th_3 > MAX_ANGLE_3 || th_3 < MIN_ANGLE_3)return false;
-
-    // cout << "pwh = " << pwh << endl;
-    // cout << "pwz0 = " << pwz1 << endl;
-    // cout << "pwz = " << pwz << endl;
-    // cout << "c3 = " << c3 << endl;
-    // cout << "s3 = " << s3 << endl;
-    // cout << "th_3 = " << rad_th_3<< endl;
-    // cout << "cp = " << cphi << endl;
-    // cout << "p = " << phi << endl;
-    // cout << "b = " << beta<< endl;
-    // cout << "th_2 = " << rad_th_2 << endl;
-    // cout << "th_1 = " << rad_th_1 << endl;
-    // cout << "th_1 = " << rad_th_1 << endl;
-    // cout << "a_th_1 = " << th_1 << endl;
-    // cout << "a_th_2 = " << th_2 << endl;
-    // cout << "a_th_3 = " << th_3 << endl;	
 	
 	return true;
 }
@@ -96,9 +81,6 @@ int main(void)
     point.x=143;
     point.y=0;
     point.z=85;
-
-
-
     //basic_orientation_t ELBOW_UP ou ELBOW_DOWN
     if(is_point_on_working_space(d1,a1,a2,a3,point,ELBOW_DOWN))
 	cout << "true" << endl;
