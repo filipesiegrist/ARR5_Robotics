@@ -44,7 +44,7 @@ robot_angles_t inverse_kinematics(distance_t d1, distance_t a1, distance_t a2, d
     float c3 = (SQ(pwh) + SQ(pwz) - SQ(a2) - SQ(a3)) / (2*a2*a3);
     //Verificar se o cosseno esta entre menos um e um!
     if(c3 > 1 || c3 < -1){
-        cout << "Erro: Fora do espaço de trabalho do robo." << endl;
+        // cout << "Erro: Fora do espaço de trabalho do robo." << endl;
     }
 
 
@@ -55,7 +55,7 @@ robot_angles_t inverse_kinematics(distance_t d1, distance_t a1, distance_t a2, d
     float cphi = (SQ(pwh) + SQ(pwz) + SQ(a2) - SQ(a3)) / (2*a2*sqrt(abs(SQ(pwh)+SQ(pwz))));
     //Verificar se o cosseno esta entre menos um e um!
     if(cphi > 1 || cphi < -1){
-        cout << "Erro: Fora do espaço de trabalho do robo." << endl;
+        // cout << "Erro: Fora do espaço de trabalho do robo." << endl;
     } 
 
     if(cphi>1)cphi=1;
