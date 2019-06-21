@@ -71,22 +71,22 @@ bool is_point_on_working_space(distance_t d1, distance_t a1, distance_t a2, dist
 	
 	return true;
 }
-int main(void)
-{
-    distance_t a1 = 14.53;
-    distance_t a2 = 45.00;
-    distance_t a3 = 83.00;
-    distance_t d1 = 85;
-    position_t point;
-    point.x=143;
-    point.y=0;
-    point.z=85;
-    //basic_orientation_t ELBOW_UP ou ELBOW_DOWN
-    if(is_point_on_working_space(d1,a1,a2,a3,point,ELBOW_DOWN))
-	cout << "true" << endl;
-	else cout << "false" << endl;
+// int main(void)
+// {
+//     distance_t a1 = 14.53;
+//     distance_t a2 = 45.00;
+//     distance_t a3 = 83.00;
+//     distance_t d1 = 85;
+//     position_t point;
+//     point.x=143;
+//     point.y=0;
+//     point.z=85;
+//     //basic_orientation_t ELBOW_UP ou ELBOW_DOWN
+//     if(is_point_on_working_space(d1,a1,a2,a3,point,ELBOW_DOWN))
+// 	cout << "true" << endl;
+// 	else cout << "false" << endl;
 
-	return 0;
-}
+// 	return 0;
+// }
 
 #endif
