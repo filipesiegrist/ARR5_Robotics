@@ -22,3 +22,5 @@ void pontos_intermediarios(position_t p1, position_t p2, position_t out_pontos[]
 position_t move_x(position_t pos, distance_t delta);
 position_t move_y(position_t pos, distance_t delta);
 position_t move_z(position_t pos, distance_t delta);
+
+#endif
