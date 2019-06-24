@@ -8,21 +8,21 @@
 #include <ARR5_Inverse_Kinematics.h>
 
 #include <VarSpeedServo.h>
-#include <ARR5_Angle_Conversions.h> 
+#include <ARR5_Angle_Conversions.h>
 
 typedef enum JOINTS {
-  JUNTA_1 = 0,
-  JUNTA_2 = 1,
-  JUNTA_3 = 2,
-  CLAW = 3
-} joint_t;
+	JUNTA_1 = 0,
+	JUNTA_2 = 1,
+	JUNTA_3 = 2,
+	CLAW = 3
+}joint_t;
 
 
 //conversor de angulos
 int (*jointConversion[3])(angle_t a) = {
-  fromJointToServoBase,
-  fromJointToServoShoulder,
-  fromJointToServoElbow
+	fromJointToServoBase,
+	fromJointToServoShoulder,
+	fromJointToServoElbow
 };
 
 VarSpeedServo jointServo[4];   // create servo object to control a servo
@@ -55,38 +55,37 @@ angle_t Garra;
 
 
 void setup() {
-  //inisia serial
-  Serial.begin(19200);
-  //referencia os pinos para as juntas
-  jointServo[JUNTA_1].attach(jointPin[JUNTA_1]);
-  jointServo[JUNTA_2].attach(jointPin[JUNTA_2]);
-  jointServo[JUNTA_3].attach(jointPin[JUNTA_3]);
-  jointServo[CLAW].attach(jointPin[CLAW]); 
-  //deley 
-  delay(15);
-  Ang_Objetivo.theta_1=60;
-  Ang_Objetivo.theta_2=60;
-  Ang_Objetivo.theta_3=60;
-  mover(Ang_Atual,Garra);
-
+	//inisia serial
+	Serial.begin(19200);
+	//referencia os pinos para as juntas
+	jointServo[JUNTA_1].attach(jointPin[JUNTA_1]);
+	jointServo[JUNTA_2].attach(jointPin[JUNTA_2]);
+	jointServo[JUNTA_3].attach(jointPin[JUNTA_3]);
+	jointServo[CLAW].attach(jointPin[CLAW]);
+	//deley
+	delay(15);
+	Ang_Objetivo.theta_1=60;
+	Ang_Objetivo.theta_2=60;
+	Ang_Objetivo.theta_3=60;
+	mover(Ang_Atual,Garra);	
 }
 
 void mover(robot_angles_t Ang_Atual,angle_t Garra){
-  jointServo[JUNTA_1].slowmove((int)Ang_Atual.theta_1, SPEED);
-  delay(15);
-  jointServo[JUNTA_2].slowmove((int)Ang_Atual.theta_2, SPEED);
-  delay(15);
-  jointServo[JUNTA_3].slowmove((int)Ang_Atual.theta_3, SPEED);
-  delay(15);
-  jointServo[ CLAW  ].slowmove((int)Garra, SPEED);
-  delay(15);
+	jointServo[JUNTA_1].slowmove((int)Ang_Atual.theta_1, SPEED);
+	delay(15);
+	jointServo[JUNTA_2].slowmove((int)Ang_Atual.theta_2, SPEED);
+	delay(15);
+	jointServo[JUNTA_3].slowmove((int)Ang_Atual.theta_3, SPEED);
+	delay(15);
+	jointServo[ CLAW  ].slowmove((int)Garra, SPEED);
+	delay(15);
 }
 
 
 void COMUNICACAO(){
 	if (Serial.available()==0) return;
 	int cmd;
-  distance_t cmdx, cmdy, cmdz;
+	distance_t cmdx, cmdy, cmdz;
 	cmd  = Serial.parseInt();
 	cmdx = (distance_t)Serial.parseInt();
 	cmdy = (distance_t)Serial.parseInt();
@@ -94,51 +93,50 @@ void COMUNICACAO(){
 	switch (cmd)
 	{
 		case 0:
-		// move pra x y z
-    	Pos_Objetivo.x = cmdx;
-	    Pos_Objetivo.y = cmdy;
-	    Pos_Objetivo.z = cmdz;
-	   	break;
+			//move pra x y z
+			Pos_Objetivo.x = cmdx;
+			Pos_Objetivo.y = cmdy;
+			Pos_Objetivo.z = cmdz;
+		break;
 
-	   case 1:
-	   	// move x
-      Pos_Objetivo.x = cmdx;
-	   	break;
+	   	case 1:
+			//move x
+			Pos_Objetivo.x = cmdx;
+		break;
 
-	  case 2:
-	   	// move y
-      Pos_Objetivo.y = cmdy;
-	   	break;
+	  	case 2:
+			//move y
+	  		Pos_Objetivo.y = cmdy;
+		break;
 
 		case 3:
-	   	// move z
-      Pos_Objetivo.z = cmdz;
-	   	break;
+			//move z
+	  		Pos_Objetivo.z = cmdz;
+		break;
 
-	   	case 4:
-	   	//   save
-	   	break;
+		case 4:
+			//save
+		break;
 
 		case 6:
-	   	//   start
-	   	break;
+			//start
+		break;	
 
 		case 7:
-	   	//   reset
-	   	break;
+			//reset
+		break;	
 
-	  default:
-	   	//   Instruções;
-		  break;
+	 	default:
+			//Instruções;
+		break;
 	}
-  if(!is_point_on_working_space(h, a1, a2, a3, Pos_Objetivo, orientacao))return;
+  	if(!is_point_on_working_space(h, a1, a2, a3, Pos_Objetivo, orientacao))return;
 	Ang_Atual = inverse_kinematics(h, a1, a2, a3, Pos_Objetivo, orientacao);
 	Pos_Atual = direct_kinematics(a1, a2, a3, h, Ang_Atual.theta_1, Ang_Atual.theta_2, Ang_Atual.theta_3);
-  return;
+	return;
 }
 
-
 void loop() {
-  COMUNICACAO();
-  delay(15); 
+  	COMUNICACAO();
+	delay(15);
 }
