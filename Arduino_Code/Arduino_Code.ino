@@ -95,7 +95,7 @@ cmd_t comando;
 
 
 void COMUNICACAO(){
-	comando = Serial.parseInt();
+	comando = (cmd_t)Serial.parseInt();
 
 	switch(comando){
 		case Junta1:
@@ -150,6 +150,17 @@ void COMUNICACAO(){
 		case Start:
 		while (!A_queue1.isEmpty ()){
     		//Serial.print (queue.peek ());
+
+			if(A_queue1.isEmpty())break;
+			Serial.print("A_queue1.theta_1 = ");
+			Serial.println(A_queue1.peek().theta_1);
+			Serial.print("A_queue1.theta_2 = ");
+			Serial.println(A_queue1.peek().theta_2);
+			Serial.print("A_queue1.theta_3 = ");
+			Serial.println(A_queue1.peek().theta_3);
+			Serial.print("Garra = ");
+			Serial.println(G_queue1.peek());
+
 			Move(A_queue1.peek().theta_1,JUNTA_1);
 			Move(A_queue1.peek().theta_2,JUNTA_2);
 			Move(A_queue1.peek().theta_3,JUNTA_3);
@@ -212,19 +223,9 @@ void COMUNICACAO(){
 		Serial.println(Ang_Atual.theta_2);
 		Serial.print("Ang_Atual.theta_3 = ");
 		Serial.println(Ang_Atual.theta_3);
-		break;
-
-		case 88:
-		Serial.print("A_queue1.theta_1 = ");
-		Serial.println(A_queue1.peek().theta_1);
-		Serial.print("A_queue1.theta_2 = ");
-		Serial.println(A_queue1.peek().theta_1);
-		Serial.print("A_queue1.theta_3 = ");
-		Serial.println(A_queue1.peek().theta_1);
 		Serial.print("Garra = ");
 		Serial.println(G_queue1.peek());
 		break;
-
 
 		default:
 		Serial.println("COMANDO LIBERADO");
