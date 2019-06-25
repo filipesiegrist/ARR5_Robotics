@@ -9,6 +9,16 @@
 
 #include <VarSpeedServo.h>
 #include <ARR5_Angle_Conversions.h>
+#include <QueueArray.h>
+
+QueueArray <robot_angles_t> A_queue1;
+QueueArray <angle_t> G_queue1;
+
+QueueArray <robot_angles_t> A_queue2;
+QueueArray <angle_t> G_queue2;
+
+#define MAX_ANGLE_G 25
+#define MIN_ANGLE_G 60
 
 typedef enum JOINTS {
 	JUNTA_1 = 0,
@@ -27,15 +37,10 @@ int (*jointConversion[3])(angle_t a) = {
 
 VarSpeedServo jointServo[4];   // create servo object to control a servo
 
-
-
 #define SPEED 100
 
-joint_t myJoint;
-
 //SERVOS PINS
-int jointPin[4] = {11, 9, 8, 10};
-//----------------------------------
+int jointPin[4] = {8,10,9,7};
 
 distance_t a1 = 15;
 distance_t a2 = 45;
@@ -43,97 +48,212 @@ distance_t a3 = 83;
 distance_t h = 85;
 //orientacao cotovelo
 basic_orientation_t orientacao = ELBOW_UP;
-//angulo e posicao objetivo
-robot_angles_t Ang_Objetivo;
-position_t Pos_Objetivo;
+
+//angulo objetivo
+angle_t Angulo;
+
 //angulo e posicao atual
 robot_angles_t Ang_Atual;
 position_t Pos_Atual;
+angle_t Garra_Atual;
 
 
-angle_t Garra;
+bool Move(angle_t Angulo,joint_t JUNTA){
+	int servo_angle;
+	if (JUNTA == CLAW)servo_angle = (int)Angulo;
+    else {
+		servo_angle = jointConversion[JUNTA](Angulo);
+    }
+	jointServo[JUNTA].slowmove(servo_angle, SPEED);
+	return true;
+}
 
+typedef enum cmd {
+	Junta1 = 1,
+	Junta2 = 2,
+	Junta3 = 3,
+	Garra = 4,
+
+	Save = 5,
+	Start = 6,
+	Reset = 7,
+
+	X_more = 8,
+	X_less = 9,
+
+	Y_more = 10,
+	Y_less = 11,
+
+	Z_more = 12,
+	Z_less = 13,
+
+	Print_pos = 55,
+	Print_ang = 66,
+}cmd_t;
+
+cmd_t comando;
+
+
+void COMUNICACAO(){
+	comando = Serial.parseInt();
+
+	switch(comando){
+		case Junta1:
+		Angulo = (angle_t)Serial.parseInt();
+		if(Angulo<=MAX_ANGLE_1 || Angulo >=MIN_ANGLE_1){
+			Serial.println("ERROR");
+			break;
+		}
+		Move(Angulo,JUNTA_1);
+		Ang_Atual.theta_1 = Angulo;
+		break;
+
+		case Junta2:
+		Angulo = (angle_t)Serial.parseInt();
+		if(Angulo<=MAX_ANGLE_2 || Angulo >=MIN_ANGLE_2){
+			Serial.println("ERROR");
+			break;
+		}
+		Move(Angulo,JUNTA_2);
+		Ang_Atual.theta_2 = Angulo;
+		break;
+
+		case Junta3:
+		Angulo = (angle_t)Serial.parseInt();
+		if(Angulo<=MAX_ANGLE_3 || Angulo >=MIN_ANGLE_3){
+			Serial.println("ERROR");
+			break;
+		}
+		Move(Angulo,JUNTA_3);
+		Ang_Atual.theta_3 = Angulo;
+		break;
+
+		case Garra:
+		Angulo = (angle_t)Serial.parseInt();
+		if(Angulo<=MAX_ANGLE_G || Angulo >=MIN_ANGLE_G){
+			Serial.println("ERROR");
+			break;
+		}
+		Move(Angulo,CLAW);
+		Garra_Atual=Angulo;
+		break;
+
+		case Save:
+		if(A_queue1.isFull()){
+			Serial.println("fila cheia");
+			break;
+		}
+    	A_queue1.push(Ang_Atual);
+		G_queue1.push(Garra_Atual);
+		break;
+
+		case Start:
+		while (!A_queue1.isEmpty ()){
+    		//Serial.print (queue.peek ());
+			Move(A_queue1.peek().theta_1,JUNTA_1);
+			Move(A_queue1.peek().theta_2,JUNTA_2);
+			Move(A_queue1.peek().theta_3,JUNTA_3);
+    		A_queue2.push(A_queue1.pop());
+			Move(G_queue1.peek(),CLAW);
+    		G_queue2.push(G_queue1.pop());
+ 		}
+		while (!A_queue2.isEmpty ()){
+    		//Serial.print (queue.peek ());
+    		A_queue1.push(A_queue2.pop());
+			G_queue1.push(G_queue2.pop());
+ 		}
+		break;
+
+		case Reset:
+		//esvazia queue
+		while (!A_queue1.isEmpty ()){
+    		A_queue1.pop();
+			G_queue1.pop();
+ 		}
+		break;
+
+		case X_more:
+		//acrescenta em X
+		break;
+
+		case X_less:
+		//diminui em X
+		break;
+		
+		case Y_more:
+		//acrescenta em Y
+		break;
+
+		case Y_less:
+		//diminui em Y
+		break;
+
+		case Z_more:
+		//acrescenta em Z
+		break;
+
+		case Z_less:
+		//acrescenta em Z
+		break;
+
+		case Print_pos:
+		Serial.print("Pos_Atual.x = ");
+		Serial.println(Pos_Atual.x);
+		Serial.print("Pos_Atual.y = ");
+		Serial.println(Pos_Atual.y);
+		Serial.print("Pos_Atual.z = ");
+		Serial.println(Pos_Atual.z);
+		break;
+
+		case Print_ang:
+		Serial.print("Ang_Atual.theta_1 = ");
+		Serial.println(Ang_Atual.theta_1);
+		Serial.print("Ang_Atual.theta_2 = ");
+		Serial.println(Ang_Atual.theta_2);
+		Serial.print("Ang_Atual.theta_3 = ");
+		Serial.println(Ang_Atual.theta_3);
+		break;
+
+		case 88:
+		Serial.print("A_queue1.theta_1 = ");
+		Serial.println(A_queue1.peek().theta_1);
+		Serial.print("A_queue1.theta_2 = ");
+		Serial.println(A_queue1.peek().theta_1);
+		Serial.print("A_queue1.theta_3 = ");
+		Serial.println(A_queue1.peek().theta_1);
+		Serial.print("Garra = ");
+		Serial.println(G_queue1.peek());
+		break;
+
+
+		default:
+		Serial.println("COMANDO LIBERADO");
+		break;
+	}
+	Pos_Atual = direct_kinematics(a1, a2, a3, h, Ang_Atual.theta_1, Ang_Atual.theta_2, Ang_Atual.theta_3);
+	return;
+}
 
 void setup() {
 	//inisia serial
-	Serial.begin(19200);
+	Serial.begin(115200);
+  	// set the printer of the queue.
+  	A_queue1.setPrinter (Serial);
+  	A_queue2.setPrinter (Serial);
 	//referencia os pinos para as juntas
 	jointServo[JUNTA_1].attach(jointPin[JUNTA_1]);
 	jointServo[JUNTA_2].attach(jointPin[JUNTA_2]);
 	jointServo[JUNTA_3].attach(jointPin[JUNTA_3]);
 	jointServo[CLAW].attach(jointPin[CLAW]);
-	//deley
-	delay(15);
-	Ang_Objetivo.theta_1=60;
-	Ang_Objetivo.theta_2=60;
-	Ang_Objetivo.theta_3=60;
-	mover(Ang_Atual,Garra);	
-}
-
-void mover(robot_angles_t Ang_Atual,angle_t Garra){
-	jointServo[JUNTA_1].slowmove((int)Ang_Atual.theta_1, SPEED);
-	delay(15);
-	jointServo[JUNTA_2].slowmove((int)Ang_Atual.theta_2, SPEED);
-	delay(15);
-	jointServo[JUNTA_3].slowmove((int)Ang_Atual.theta_3, SPEED);
-	delay(15);
-	jointServo[ CLAW  ].slowmove((int)Garra, SPEED);
-	delay(15);
-}
-
-
-void COMUNICACAO(){
-	if (Serial.available()==0) return;
-	int cmd;
-	distance_t cmdx, cmdy, cmdz;
-	cmd  = Serial.parseInt();
-	cmdx = (distance_t)Serial.parseInt();
-	cmdy = (distance_t)Serial.parseInt();
-	cmdz = (distance_t)Serial.parseInt();
-	switch (cmd)
-	{
-		case 0:
-			//move pra x y z
-			Pos_Objetivo.x = cmdx;
-			Pos_Objetivo.y = cmdy;
-			Pos_Objetivo.z = cmdz;
-		break;
-
-	   	case 1:
-			//move x
-			Pos_Objetivo.x = cmdx;
-		break;
-
-	  	case 2:
-			//move y
-	  		Pos_Objetivo.y = cmdy;
-		break;
-
-		case 3:
-			//move z
-	  		Pos_Objetivo.z = cmdz;
-		break;
-
-		case 4:
-			//save
-		break;
-
-		case 6:
-			//start
-		break;	
-
-		case 7:
-			//reset
-		break;	
-
-	 	default:
-			//Instruções;
-		break;
-	}
-  	if(!is_point_on_working_space(h, a1, a2, a3, Pos_Objetivo, orientacao))return;
-	Ang_Atual = inverse_kinematics(h, a1, a2, a3, Pos_Objetivo, orientacao);
-	Pos_Atual = direct_kinematics(a1, a2, a3, h, Ang_Atual.theta_1, Ang_Atual.theta_2, Ang_Atual.theta_3);
-	return;
+	//posicao inicial
+	Ang_Atual.theta_1 = 0;
+	Ang_Atual.theta_2 = 0;
+	Ang_Atual.theta_3 = 0;
+	Garra_Atual=25;
+	Move(Ang_Atual.theta_1,JUNTA_1);
+	Move(Ang_Atual.theta_2,JUNTA_2);
+	Move(Ang_Atual.theta_3,JUNTA_3);
+	Move(Garra_Atual,CLAW);
 }
 
 void loop() {
