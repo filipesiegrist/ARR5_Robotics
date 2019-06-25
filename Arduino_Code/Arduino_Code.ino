@@ -228,7 +228,7 @@ void COMUNICACAO(){
 		break;
 
 		default:
-		Serial.println("COMANDO LIBERADO");
+		//Serial.println("COMANDO LIBERADO");
 		break;
 	}
 	Pos_Atual = direct_kinematics(a1, a2, a3, h, Ang_Atual.theta_1, Ang_Atual.theta_2, Ang_Atual.theta_3);
@@ -259,5 +259,5 @@ void setup() {
 
 void loop() {
   	COMUNICACAO();
-	delay(15);
+	delay(2);
 }
