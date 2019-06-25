@@ -224,7 +224,7 @@ void COMUNICACAO(){
 		Serial.print("Ang_Atual.theta_3 = ");
 		Serial.println(Ang_Atual.theta_3);
 		Serial.print("Garra = ");
-		Serial.println(G_queue1.peek());
+		Serial.println(Garra_Atual);
 		break;
 
 		default:
