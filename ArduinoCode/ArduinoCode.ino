@@ -65,36 +65,6 @@ bool Move(angle_t Angulo,joint_t JUNTA){
 	return true;
 }
 
-typedef enum cmd {
-	Junta1 = 1,
-	Junta2 = 2,
-	Junta3 = 3,
-	Garra = 4,
-
-	Save = 5,
-	Start = 6,
-	Reset = 7,
-
-	X_more = 8,
-	X_less = 9,
-
-	Y_more = 10,
-	Y_less = 11,
-
-	Z_more = 12,
-	Z_less = 13,
-
-	Print_pos = 55,
-	Print_ang = 66,
-
-	MoveAngulos = 88
-}cmd_t;
-
-cmd_t comando;
-
-int saves=0;
-int stop;
-
 void MoveTudo(void){
 	int S_Junta1 = Serial.parseInt();
 	int S_Junta2 = Serial.parseInt();
@@ -128,8 +98,34 @@ void MoveTudo(void){
 	Serial.println();
 	return;
 }
+typedef enum cmd {
+	Junta1 = 1,
+	Junta2 = 2,
+	Junta3 = 3,
+	Garra = 4,
 
+	Save = 5,
+	Start = 6,
+	Reset = 7,
 
+	X_more = 8,
+	X_less = 9,
+
+	Y_more = 10,
+	Y_less = 11,
+
+	Z_more = 12,
+	Z_less = 13,
+
+	Print_pos = 55,
+	Print_ang = 66,
+
+	MoveAngulos = 88
+}cmd_t;
+
+int saves=0;
+cmd_t comando;
+int stop;
 
 void COMUNICACAO(){
 	if (Serial.available() <= 0) return;
@@ -181,13 +177,13 @@ void COMUNICACAO(){
 		break;
 
 		case Save:
-		if(A_queue1.isFull()){
+		if(saves==15){
 			Serial.println("fila cheia");
 			break;
 		}
     	saves++;
-    	A_queue1.push(Ang_Atual);
-		G_queue1.push(Garra_Atual);
+    	A_queue1.enqueue(Ang_Atual);
+		G_queue1.enqueue(Garra_Atual);
 		Serial.print(saves);
     	Serial.println(" movimento(s) salvo(s)");
 		break;
@@ -201,26 +197,27 @@ void COMUNICACAO(){
 			while (!A_queue1.isEmpty ()){
 				if(A_queue1.isEmpty())break;
 				// Serial.print("A_queue1.theta_1 = ");
-				// Serial.println(A_queue1.peek().theta_1);
+				// Serial.println(A_queue1.front().theta_1);
 				// Serial.print("A_queue1.theta_2 = ");
-				// Serial.println(A_queue1.peek().theta_2);
+				// Serial.println(A_queue1.front().theta_2);
 				// Serial.print("A_queue1.theta_3 = ");
-				// Serial.println(A_queue1.peek().theta_3);
+				// Serial.println(A_queue1.front().theta_3);
 				// Serial.print("Garra = ");
-				// Serial.println(G_queue1.peek());
-				Move(A_queue1.peek().theta_1,JUNTA_1);
-				Move(A_queue1.peek().theta_2,JUNTA_2);
-				Move(A_queue1.peek().theta_3,JUNTA_3);
-    			A_queue2.push(A_queue1.pop());
-				Move(G_queue1.peek(),CLAW);
-    			G_queue2.push(G_queue1.pop());
+				// Serial.println(G_queue1.front());
+				Move((int)jointConversion[JUNTA_1](A_queue1.front().theta_1),JUNTA_1);
+				Move((int)jointConversion[JUNTA_2](A_queue1.front().theta_2),JUNTA_2);
+				Move((int)jointConversion[JUNTA_3](A_queue1.front().theta_3),JUNTA_3);
+    			A_queue2.enqueue(A_queue1.dequeue());
+				Move(G_queue1.front(),CLAW);
+    			G_queue2.enqueue(G_queue1.dequeue());
  			}
 			while (!A_queue2.isEmpty ()){
-    			//Serial.print (queue.peek ());
-    			A_queue1.push(A_queue2.pop());
-				G_queue1.push(G_queue2.pop());
+    			//Serial.print (queue.front ());
+    			A_queue1.enqueue(A_queue2.dequeue());
+				G_queue1.enqueue(G_queue2.dequeue());
  			}
  		}
+		stop=0;
  		Serial.println("Stop moves");
 		break;
 
@@ -228,8 +225,8 @@ void COMUNICACAO(){
 		Serial.println("Reset moves");
 		//esvazia queue
 		while (!A_queue1.isEmpty ()){
-    		A_queue1.pop();
-			G_queue1.pop();
+    		A_queue1.dequeue();
+			G_queue1.dequeue();
  		}
     	saves=0;
 		break;
