@@ -72,19 +72,19 @@ void MoveTudo(void){
 	int S_Garra  = Serial.parseInt();
 
 	if(S_Junta1>-89 && S_Junta1 <91){
-		Move((int)jointConversion[JUNTA_1](S_Junta1),JUNTA_1);
+		Move(S_Junta1,JUNTA_1);
 		Ang_Atual.theta_1 = S_Junta1;
 	}
 	else Serial.print("J1 ");
 
 	if(S_Junta2>-32 && S_Junta2 <112){
-		Move((int)jointConversion[JUNTA_2](S_Junta2),JUNTA_2);
+		Move(S_Junta2,JUNTA_2);
 		Ang_Atual.theta_2 = S_Junta2;
 	}
 	else Serial.print("J2 ");
 
 	if(S_Junta3>-94.5 && S_Junta3 <67.5){
-		Move((int)jointConversion[JUNTA_3](S_Junta3),JUNTA_3);
+		Move(S_Junta3,JUNTA_3);
 		Ang_Atual.theta_3 = S_Junta3;
 	}
 	else Serial.print("J3 ");
@@ -138,7 +138,7 @@ void COMUNICACAO(){
 			Serial.println("junta 1 ERROR");
 			break;
 		}
-		Move((int)jointConversion[JUNTA_1](Angulo),JUNTA_1);
+		Move(Angulo,JUNTA_1);
 		Ang_Atual.theta_1 = Angulo;
 		Serial.println("junta 1 alterada");
 		break;
@@ -149,7 +149,7 @@ void COMUNICACAO(){
 			Serial.println("junta 2 ERROR");
 			break;
 		}
-		Move((int)jointConversion[JUNTA_2](Angulo),JUNTA_2);
+		Move(Angulo,JUNTA_2);
 		Ang_Atual.theta_2 = Angulo;
 		Serial.println("junta 2 alterada");
 		break;
@@ -160,7 +160,7 @@ void COMUNICACAO(){
 			Serial.println("junta 3 ERROR");
 			break;
 		}
-		Move((int)jointConversion[JUNTA_3](Angulo),JUNTA_3);
+		Move(Angulo,JUNTA_3);
 		Ang_Atual.theta_3 = Angulo;
 		Serial.println("junta 3 alterada");
 		break;
@@ -204,9 +204,9 @@ void COMUNICACAO(){
 				// Serial.println(A_queue1.front().theta_3);
 				// Serial.print("Garra = ");
 				// Serial.println(G_queue1.front());
-				Move((int)jointConversion[JUNTA_1](A_queue1.front().theta_1),JUNTA_1);
-				Move((int)jointConversion[JUNTA_2](A_queue1.front().theta_2),JUNTA_2);
-				Move((int)jointConversion[JUNTA_3](A_queue1.front().theta_3),JUNTA_3);
+				Move(A_queue1.front().theta_1,JUNTA_1);
+				Move(A_queue1.front().theta_2,JUNTA_2);
+				Move(A_queue1.front().theta_3,JUNTA_3);
     			A_queue2.enqueue(A_queue1.dequeue());
 				Move(G_queue1.front(),CLAW);
     			G_queue2.enqueue(G_queue1.dequeue());
