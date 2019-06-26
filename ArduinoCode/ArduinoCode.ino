@@ -93,15 +93,17 @@ typedef enum cmd {
 
 cmd_t comando;
 
+int stop;
 
 void COMUNICACAO(){
+	if (Serial.available() <= 0) return;
 	comando = (cmd_t)Serial.parseInt();
 
 	switch(comando){
 		case Junta1:
 		Angulo = (angle_t)Serial.parseInt();
 		if(Angulo<=MAX_ANGLE_1 || Angulo >=MIN_ANGLE_1){
-			Serial.println("ERROR");
+			Serial.println("junta 1 ERROR");
 			break;
 		}
 		Move(Angulo,JUNTA_1);
@@ -112,7 +114,7 @@ void COMUNICACAO(){
 		case Junta2:
 		Angulo = (angle_t)Serial.parseInt();
 		if(Angulo<=MAX_ANGLE_2 || Angulo >=MIN_ANGLE_2){
-			Serial.println("ERROR");
+			Serial.println("junta 2 ERROR");
 			break;
 		}
 		Move(Angulo,JUNTA_2);
@@ -123,7 +125,7 @@ void COMUNICACAO(){
 		case Junta3:
 		Angulo = (angle_t)Serial.parseInt();
 		if(Angulo<=MAX_ANGLE_3 || Angulo >=MIN_ANGLE_3){
-			Serial.println("ERROR");
+			Serial.println("junta 3 ERROR");
 			break;
 		}
 		Move(Angulo,JUNTA_3);
@@ -134,7 +136,7 @@ void COMUNICACAO(){
 		case Garra:
 		Angulo = (angle_t)Serial.parseInt();
 		if(Angulo<=MAX_ANGLE_G || Angulo >=MIN_ANGLE_G){
-			Serial.println("ERROR");
+			Serial.println("garra ERROR");
 			break;
 		}
 		Move(Angulo,CLAW);
@@ -153,6 +155,10 @@ void COMUNICACAO(){
 		break;
 
 		case Start:
+		while(stop!=404){
+		if (Serial.available() > 0){
+			stop = Serial.parseInt();
+		}
 		Serial.println("Start moves");
 		while (!A_queue1.isEmpty ()){
     		//Serial.print (queue.peek ());
@@ -179,6 +185,8 @@ void COMUNICACAO(){
     		A_queue1.push(A_queue2.pop());
 			G_queue1.push(G_queue2.pop());
  		}
+ 		}
+ 		Serial.println("Stop moves");
 		break;
 
 		case Reset:
@@ -221,20 +229,20 @@ void COMUNICACAO(){
 		break;
 
 		case Print_pos:
-		Serial.print("Pos_Atual.x = ");
+		Serial.print("Pos x = ");
 		Serial.println(Pos_Atual.x);
-		Serial.print("Pos_Atual.y = ");
+		Serial.print("Pos_ y = ");
 		Serial.println(Pos_Atual.y);
-		Serial.print("Pos_Atual.z = ");
+		Serial.print("Pos z = ");
 		Serial.println(Pos_Atual.z);
 		break;
 
 		case Print_ang:
-		Serial.print("Ang_Atual.theta_1 = ");
+		Serial.print("Junta 1 = ");
 		Serial.println(Ang_Atual.theta_1);
-		Serial.print("Ang_Atual.theta_2 = ");
+		Serial.print("Junta 2 = ");
 		Serial.println(Ang_Atual.theta_2);
-		Serial.print("Ang_Atual.theta_3 = ");
+		Serial.print("Junta 3 = ");
 		Serial.println(Ang_Atual.theta_3);
 		Serial.print("Garra = ");
 		Serial.println(Garra_Atual);
