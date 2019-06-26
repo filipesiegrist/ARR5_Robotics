@@ -272,5 +272,5 @@ void setup() {
 
 void loop() {
   	COMUNICACAO();
-	delay(2);
+	//delay(2);
 }
