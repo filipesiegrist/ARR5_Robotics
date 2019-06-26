@@ -38,16 +38,17 @@ def receber_coordenadas():
 	global x_atual
 	global y_atual
 	global z_atual
-
-	ser.write(b'1 46')
+	entry_x=str(55)
+	ser.write(str(entry_x).encode('ascii'))
 	time.sleep(2)
 	ser.write(b'66')
 	line1 = ""
 	line2 = ""
 	line3 = ""
-
+	# ser.reset_input_buffer()
 	while (len(line3) == 0):
 		line = ser.readline()
+		# linex = str(line).partition("!")
 		print(line)
 
 	#x_atual = SerialRead()

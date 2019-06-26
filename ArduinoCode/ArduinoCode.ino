@@ -106,6 +106,7 @@ void COMUNICACAO(){
 		}
 		Move(Angulo,JUNTA_1);
 		Ang_Atual.theta_1 = Angulo;
+		Serial.println("junta 1 alterada");
 		break;
 
 		case Junta2:
@@ -116,6 +117,7 @@ void COMUNICACAO(){
 		}
 		Move(Angulo,JUNTA_2);
 		Ang_Atual.theta_2 = Angulo;
+		Serial.println("junta 2 alterada");
 		break;
 
 		case Junta3:
@@ -126,6 +128,7 @@ void COMUNICACAO(){
 		}
 		Move(Angulo,JUNTA_3);
 		Ang_Atual.theta_3 = Angulo;
+		Serial.println("junta 3 alterada");
 		break;
 
 		case Garra:
@@ -136,6 +139,7 @@ void COMUNICACAO(){
 		}
 		Move(Angulo,CLAW);
 		Garra_Atual=Angulo;
+		Serial.println("garra alterada");
 		break;
 
 		case Save:
@@ -145,9 +149,11 @@ void COMUNICACAO(){
 		}
     	A_queue1.push(Ang_Atual);
 		G_queue1.push(Garra_Atual);
+		Serial.println("posição salva");
 		break;
 
 		case Start:
+		Serial.println("Start moves");
 		while (!A_queue1.isEmpty ()){
     		//Serial.print (queue.peek ());
 
@@ -176,6 +182,7 @@ void COMUNICACAO(){
 		break;
 
 		case Reset:
+		Serial.println("Reset moves");
 		//esvazia queue
 		while (!A_queue1.isEmpty ()){
     		A_queue1.pop();
@@ -184,26 +191,32 @@ void COMUNICACAO(){
 		break;
 
 		case X_more:
+		Serial.println("move + X");
 		//acrescenta em X
 		break;
 
 		case X_less:
+		Serial.println("move - X");
 		//diminui em X
 		break;
 		
 		case Y_more:
+		Serial.println("move + Y");
 		//acrescenta em Y
 		break;
 
 		case Y_less:
+		Serial.println("move -Y");
 		//diminui em Y
 		break;
 
 		case Z_more:
+		Serial.println("move + Z");
 		//acrescenta em Z
 		break;
 
 		case Z_less:
+		Serial.println("move - Z");
 		//acrescenta em Z
 		break;
 
