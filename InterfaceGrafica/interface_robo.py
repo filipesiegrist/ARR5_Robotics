@@ -24,48 +24,53 @@ cont = 0
 def enviar_coordenadas(entry_j1, entry_j2, entry_j3, entry_g):
 
 	ser.reset_input_buffer()
-	ser.write(b'1 ')
+	ser.write(b'88')
+
+	ser.write(b' ')
 	ser.write(str(entry_j1).encode('ascii'))
-	time.sleep(2)
+	# time.sleep(2)
 
-	ser.write(b'2 ')
+	ser.write(b' ')
 	ser.write(str(entry_j2).encode('ascii'))
-	time.sleep(2)
+	# time.sleep(2)
 
-	ser.write(b'3 ')
+	ser.write(b' ')
 	ser.write(str(entry_j3).encode('ascii'))
-	time.sleep(2)
+	# time.sleep(2)
 
-	ser.write(b'4 ')
+	ser.write(b' ')
 	ser.write(str(entry_g).encode('ascii'))
-	time.sleep(2)
+	# time.sleep(2)
+
+	# line1 = ""
+	# line2 = ""
+	# line3 = ""
+	# line4 = ""
+	# while (len(line4) == 0):
+	# 	line1 = ser.readline().decode().strip('\r\n')
+	# 	line2 = ser.readline().decode().strip('\r\n')
+	# 	line3 = ser.readline().decode().strip('\r\n')
+	# 	line4 = ser.readline().decode().strip('\r\n')
+	
+	# print(line1)
+	# print(line2)
+	# print(line3)
+	# print(line4)
 
 	line1 = ""
-	line2 = ""
-	line3 = ""
-	line4 = ""
-	while (len(line4) == 0):
+	while (len(line1) == 0):
 		line1 = ser.readline().decode().strip('\r\n')
-		line2 = ser.readline().decode().strip('\r\n')
-		line3 = ser.readline().decode().strip('\r\n')
-		line4 = ser.readline().decode().strip('\r\n')
-	
-	print(line1)
-	print(line2)
-	print(line3)
-	print(line4)
-
 	label_res.config(text='%s' % (line1), font=10, anchor='w', justify='left')
-
-
+	# label_res.config(text='%s' % (line1), font=10, anchor='w', justify='left')
+	# label_res.config(text='dados enviados', font=10, anchor='w', justify='left')
 
 def salvar_coordenadas():
 	ser.reset_input_buffer()
 
 	ser.write(b'5')
-	time.sleep(1)
-
-	line1 = ser.readline().decode().strip('\r\n')
+	line1 = ""
+	while (len(line1) == 0):
+		line1 = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (line1), font=10, anchor='w', justify='left')
 
 def receber_coordenadas():
@@ -88,7 +93,7 @@ def receber_coordenadas():
 	print(line3)
 	
 	coord_upper.config(text='%s\n%s\n%s\n%s' % (resposta, line1, line2, line3), font=10, anchor='w', justify='left')
-	label_res.config(text='%s' % (resposta), font=10, anchor='w', justify='left')
+	# label_res.config(text='%s' % (resposta), font=10, anchor='w', justify='left')
 
 	ser.write(b'55')
 	line4 = ""
@@ -104,87 +109,87 @@ def receber_coordenadas():
 	print(line5)
 	print(line6)
 
-	label_res.config(text='%s' % (line4), font=10, anchor='w', justify='left')
 	coord_lower.config(text='%s\n%s\n%s' % (line4, line5, line6), font=10, anchor='w', justify='left')
-
+	# label_res.config(text='%s' % (line4), font=10, anchor='w', justify='left')
+	label_res.config(text='dados recebidos', font=10, anchor='w', justify='left')
 def start():
 	ser.reset_input_buffer()
 	ser.write(b'6')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	print(msg)
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 
 def reset():
 	ser.reset_input_buffer()
 	ser.write(b'7')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 
 def stop():
 	ser.reset_input_buffer()
 	ser.write(b'404')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 
 def inc_x():
 	ser.reset_input_buffer()
 	ser.write(b'8')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 
 def inc_y():
 	ser.reset_input_buffer()
 	ser.write(b'10')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 
 def inc_z():
 	ser.reset_input_buffer()
 	ser.write(b'12')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 
 def dec_x():
 	ser.reset_input_buffer()
 	ser.write(b'9')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 
 def dec_y():
 	ser.reset_input_buffer()
 	ser.write(b'11')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 
 def dec_z():
 	ser.reset_input_buffer()
 	ser.write(b'13')
-	time.sleep(1)
-
-	msg = ser.readline().decode().strip('\r\n')
+	msg = ""
+	while (len(msg) == 0):
+		msg = ser.readline().decode().strip('\r\n')
 	label_res.config(text='%s' % (msg), font=10, anchor='w', justify='left')
 	print(msg)
 

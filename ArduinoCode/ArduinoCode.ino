@@ -17,9 +17,6 @@ QueueArray <angle_t> G_queue1;
 QueueArray <robot_angles_t> A_queue2;
 QueueArray <angle_t> G_queue2;
 
-#define MAX_ANGLE_G 25
-#define MIN_ANGLE_G 60
-
 typedef enum JOINTS {
 	JUNTA_1 = 0,
 	JUNTA_2 = 1,
@@ -89,11 +86,50 @@ typedef enum cmd {
 
 	Print_pos = 55,
 	Print_ang = 66,
+
+	MoveAngulos = 88
 }cmd_t;
 
 cmd_t comando;
 
+int saves=0;
 int stop;
+
+void MoveTudo(void){
+	int S_Junta1 = Serial.parseInt();
+	int S_Junta2 = Serial.parseInt();
+	int S_Junta3 = Serial.parseInt();
+	int S_Garra  = Serial.parseInt();
+
+	if(S_Junta1>-89 && S_Junta1 <91){
+		Move((int)jointConversion[JUNTA_1](S_Junta1),JUNTA_1);
+		Ang_Atual.theta_1 = S_Junta1;
+	}
+	else Serial.print("J1 ");
+
+	if(S_Junta2>-32 && S_Junta2 <112){
+		Move((int)jointConversion[JUNTA_2](S_Junta2),JUNTA_2);
+		Ang_Atual.theta_2 = S_Junta2;
+	}
+	else Serial.print("J2 ");
+
+	if(S_Junta3>-94.5 && S_Junta3 <67.5){
+		Move((int)jointConversion[JUNTA_3](S_Junta3),JUNTA_3);
+		Ang_Atual.theta_3 = S_Junta3;
+	}
+	else Serial.print("J3 ");
+
+	if(S_Garra>25 && S_Garra <60){
+		Move(S_Garra,CLAW);
+		Garra_Atual=S_Garra;
+	}
+	else Serial.print("G");
+
+	Serial.println();
+	return;
+}
+
+
 
 void COMUNICACAO(){
 	if (Serial.available() <= 0) return;
@@ -106,7 +142,7 @@ void COMUNICACAO(){
 			Serial.println("junta 1 ERROR");
 			break;
 		}
-		Move(Angulo,JUNTA_1);
+		Move((int)jointConversion[JUNTA_1](Angulo),JUNTA_1);
 		Ang_Atual.theta_1 = Angulo;
 		Serial.println("junta 1 alterada");
 		break;
@@ -117,7 +153,7 @@ void COMUNICACAO(){
 			Serial.println("junta 2 ERROR");
 			break;
 		}
-		Move(Angulo,JUNTA_2);
+		Move((int)jointConversion[JUNTA_2](Angulo),JUNTA_2);
 		Ang_Atual.theta_2 = Angulo;
 		Serial.println("junta 2 alterada");
 		break;
@@ -128,14 +164,14 @@ void COMUNICACAO(){
 			Serial.println("junta 3 ERROR");
 			break;
 		}
-		Move(Angulo,JUNTA_3);
+		Move((int)jointConversion[JUNTA_3](Angulo),JUNTA_3);
 		Ang_Atual.theta_3 = Angulo;
 		Serial.println("junta 3 alterada");
 		break;
 
 		case Garra:
 		Angulo = (angle_t)Serial.parseInt();
-		if(Angulo<=MAX_ANGLE_G || Angulo >=MIN_ANGLE_G){
+		if(Angulo<=25 || Angulo >=60){
 			Serial.println("garra ERROR");
 			break;
 		}
@@ -149,42 +185,41 @@ void COMUNICACAO(){
 			Serial.println("fila cheia");
 			break;
 		}
+    	saves++;
     	A_queue1.push(Ang_Atual);
 		G_queue1.push(Garra_Atual);
-		Serial.println("posição salva");
+		Serial.print(saves);
+    	Serial.println(" movimento(s) salvo(s)");
 		break;
 
 		case Start:
+    	Serial.println("Start moves");
 		while(stop!=404){
-		if (Serial.available() > 0){
-			stop = Serial.parseInt();
-		}
-		Serial.println("Start moves");
-		while (!A_queue1.isEmpty ()){
-    		//Serial.print (queue.peek ());
-
-			if(A_queue1.isEmpty())break;
-			Serial.print("A_queue1.theta_1 = ");
-			Serial.println(A_queue1.peek().theta_1);
-			Serial.print("A_queue1.theta_2 = ");
-			Serial.println(A_queue1.peek().theta_2);
-			Serial.print("A_queue1.theta_3 = ");
-			Serial.println(A_queue1.peek().theta_3);
-			Serial.print("Garra = ");
-			Serial.println(G_queue1.peek());
-
-			Move(A_queue1.peek().theta_1,JUNTA_1);
-			Move(A_queue1.peek().theta_2,JUNTA_2);
-			Move(A_queue1.peek().theta_3,JUNTA_3);
-    		A_queue2.push(A_queue1.pop());
-			Move(G_queue1.peek(),CLAW);
-    		G_queue2.push(G_queue1.pop());
- 		}
-		while (!A_queue2.isEmpty ()){
-    		//Serial.print (queue.peek ());
-    		A_queue1.push(A_queue2.pop());
-			G_queue1.push(G_queue2.pop());
- 		}
+			if (Serial.available() > 0){
+				stop = Serial.parseInt();
+			}
+			while (!A_queue1.isEmpty ()){
+				if(A_queue1.isEmpty())break;
+				// Serial.print("A_queue1.theta_1 = ");
+				// Serial.println(A_queue1.peek().theta_1);
+				// Serial.print("A_queue1.theta_2 = ");
+				// Serial.println(A_queue1.peek().theta_2);
+				// Serial.print("A_queue1.theta_3 = ");
+				// Serial.println(A_queue1.peek().theta_3);
+				// Serial.print("Garra = ");
+				// Serial.println(G_queue1.peek());
+				Move(A_queue1.peek().theta_1,JUNTA_1);
+				Move(A_queue1.peek().theta_2,JUNTA_2);
+				Move(A_queue1.peek().theta_3,JUNTA_3);
+    			A_queue2.push(A_queue1.pop());
+				Move(G_queue1.peek(),CLAW);
+    			G_queue2.push(G_queue1.pop());
+ 			}
+			while (!A_queue2.isEmpty ()){
+    			//Serial.print (queue.peek ());
+    			A_queue1.push(A_queue2.pop());
+				G_queue1.push(G_queue2.pop());
+ 			}
  		}
  		Serial.println("Stop moves");
 		break;
@@ -196,6 +231,7 @@ void COMUNICACAO(){
     		A_queue1.pop();
 			G_queue1.pop();
  		}
+    	saves=0;
 		break;
 
 		case X_more:
@@ -231,7 +267,7 @@ void COMUNICACAO(){
 		case Print_pos:
 		Serial.print("Pos x = ");
 		Serial.println(Pos_Atual.x);
-		Serial.print("Pos_ y = ");
+		Serial.print("Pos y = ");
 		Serial.println(Pos_Atual.y);
 		Serial.print("Pos z = ");
 		Serial.println(Pos_Atual.z);
@@ -248,6 +284,15 @@ void COMUNICACAO(){
 		Serial.println(Garra_Atual);
 		break;
 
+	case MoveAngulos:
+    Serial.print("Erros ");
+		MoveTudo();
+	break;
+
+    case 404:
+    Serial.println("Stop moves");
+    break;
+    
 		default:
 		//Serial.println("COMANDO LIBERADO");
 		break;
