@@ -38,12 +38,12 @@ VarSpeedServo jointServo[4];   // create servo object to control a servo
 //SERVOS PINS
 int jointPin[4] = {8,10,9,7};
 
-# Parametros do robo
+//Parametros do robo
 #define a1 15
 #define a2 45
 #define a3 83
 #define h 85
-
+#define DELTA 10
 //angulo objetivo
 angle_t Angulo;
 
@@ -53,6 +53,9 @@ position_t Pos_Atual;
 angle_t Garra_Atual;
 robot_angles_t Ang_Mandar;
 
+#define ANALOG_X A3
+#define ANALOG_Y A4
+#define ANALOG_Z A5
 
 void pos_inicial(void){
 	// movimeno 1
@@ -63,7 +66,7 @@ void pos_inicial(void){
 	A_queue1.enqueue(Ang_Atual);
 	G_queue1.enqueue(Garra_Atual);
 
-		Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_1 = -38.00;
 	Ang_Atual.theta_2 = 0.00;
 	Ang_Atual.theta_3 = 2.00;
 	Garra_Atual=60.00;
@@ -76,8 +79,6 @@ void pos_inicial(void){
 	Garra_Atual=30.00;
 	A_queue1.enqueue(Ang_Atual);
 	G_queue1.enqueue(Garra_Atual);
-
-
 	// movimeno 4
 	Ang_Atual.theta_1 = 0;
 	Ang_Atual.theta_2 = 40.00;
@@ -172,12 +173,12 @@ void pos_inicial(void){
 	G_queue1.enqueue(Garra_Atual);
 }
 
-bool anguloValido(int anguloServo) {}
+bool anguloValido(int anguloServo) {
 	if (anguloServo >= 180 || anguloServo <= 0)
     	return false;
     else
     	return true;
-
+}
 
 bool Move(angle_t Angulo,joint_t JUNTA){
 	int servo_angle;
@@ -190,6 +191,35 @@ bool Move(angle_t Angulo,joint_t JUNTA){
     	return false;
 	jointServo[JUNTA].slowmove(servo_angle, SPEED);
 	return true;
+}
+
+bool MoveInversa(robot_angles_t angles) {
+	int S_Junta1 = angles.theta_1;
+    int S_Junta2 = angles.theta_2;
+    int S_Junta3 = angles.theta_3;
+	// Se a posicao e invalida, nem manda ir!
+	if (!anguloValido(jointConversion[JUNTA_1](S_Junta1)) || !anguloValido(jointConversion[JUNTA_2](S_Junta2)) || !anguloValido(jointConversion[JUNTA_3](S_Junta3)))
+		return;
+
+	if(S_Junta1>=-89 && S_Junta1 <=91){
+		Move(S_Junta1,JUNTA_1);
+		Ang_Atual.theta_1 = S_Junta1;
+	}
+	else Serial.print("t1 ");
+
+	if(S_Junta2>=-32 && S_Junta2 <=112){
+		Move(S_Junta2,JUNTA_2);
+		Ang_Atual.theta_2 = S_Junta2;
+	}
+	else Serial.print("t2 ");
+
+	if(S_Junta3>=-94.5 && S_Junta3 <=67.5){
+		Move(S_Junta3,JUNTA_3);
+		Ang_Atual.theta_3 = S_Junta3;
+	}
+	else Serial.print("t3 ");
+	Serial.println();
+	return;
 }
 
 void MoveTudo(void){
@@ -259,9 +289,25 @@ cmd_t comando;
 int stop;
 
 void COMUNICACAO(){
-	if (Serial.available() <= 0) return;
-	comando = (cmd_t)Serial.parseInt();
-
+	int read_x,read_y,read_z;
+	read_x = analogRead(ANALOG_X);
+	read_y = analogRead(ANALOG_Y);
+	read_z = analogRead(ANALOG_Z);
+	//Serial.println(read_x);
+	//Serial.println(read_y);
+	//Serial.println(read_z);
+	if (Serial.available() <= 0){
+		if (read_x > 800) comando = X_more;
+		else if (read_x < 100) comando = X_less;
+		else if (read_y > 800) comando = Y_more;
+		else if (read_y < 100) comando = Y_less;
+		else if (read_z > 800) comando = Z_more;
+		else if (read_z < 100) comando = Z_less;
+		else return;
+	}
+	else
+		comando = (cmd_t)Serial.parseInt();
+	
 	switch(comando){
 		case Junta1:
 			Angulo = (angle_t)Serial.parseInt();
@@ -293,7 +339,7 @@ void COMUNICACAO(){
 			}
 			Move(Angulo,JUNTA_3);
 			Ang_Atual.theta_3 = Angulo;
-			Serial.println(Theta3 alterada");
+			Serial.println("Theta3 alterada");
 			break;
 
 		case Garra:
@@ -374,10 +420,12 @@ void COMUNICACAO(){
 			Pos_Atual.x += DELTA;
 			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
 			// Se a posicao e invalida, nem manda ir!
-			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3))) {
 				Serial.println("Limite fisico atingido.");
 				Pos_Atual.x -= DELTA;
 				return;
+			}
+			MoveInversa(Ang_Mandar);
 			break;
 
 		case X_less:
@@ -386,10 +434,12 @@ void COMUNICACAO(){
 			Pos_Atual.x -= DELTA;
 			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
 			// Se a posicao e invalida, nem manda ir!
-			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3))) {
 				Serial.println("Limite fisico atingido.");
 				Pos_Atual.x += DELTA;
 				return;
+			}
+			MoveInversa(Ang_Mandar);
 			break;
 		
 		case Y_more:
@@ -398,10 +448,12 @@ void COMUNICACAO(){
 			Pos_Atual.y += DELTA;
 			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
 			// Se a posicao e invalida, nem manda ir!
-			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3))) {
 				Serial.println("Limite fisico atingido.");
 				Pos_Atual.y -= DELTA;
 				return;
+			}
+			MoveInversa(Ang_Mandar);
 			break;
 
 		case Y_less:
@@ -410,10 +462,12 @@ void COMUNICACAO(){
 			Pos_Atual.y -= DELTA;
 			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
 			// Se a posicao e invalida, nem manda ir!
-			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3))) {
 				Serial.println("Limite fisico atingido.");
 				Pos_Atual.y += DELTA;
 				return;
+			}
+			MoveInversa(Ang_Mandar);
 			break;
 
 		case Z_more:
@@ -422,10 +476,12 @@ void COMUNICACAO(){
 			Pos_Atual.z += DELTA;
 			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
 			// Se a posicao e invalida, nem manda ir!
-			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3))){
 				Serial.println("Limite fisico atingido.");
 				Pos_Atual.z -= DELTA;
-				ret
+				return;
+			}
+			MoveInversa(Ang_Mandar);
 
 		case Z_less:
 			Serial.println("move - Z");
@@ -433,10 +489,12 @@ void COMUNICACAO(){
 			Pos_Atual.z -= DELTA;
 			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
 			// Se a posicao e invalida, nem manda ir!
-			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3))) {
 				Serial.println("Limite fisico atingido.");
 				Pos_Atual.z += DELTA;
 				return;
+			}
+			MoveInversa(Ang_Mandar);
 			break;
 
 		case Print_pos:
