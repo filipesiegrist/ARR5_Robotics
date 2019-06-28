@@ -38,12 +38,11 @@ VarSpeedServo jointServo[4];   // create servo object to control a servo
 //SERVOS PINS
 int jointPin[4] = {8,10,9,7};
 
-distance_t a1 = 15;
-distance_t a2 = 45;
-distance_t a3 = 83;
-distance_t h = 85;
-//orientacao cotovelo
-basic_orientation_t orientacao = ELBOW_UP;
+# Parametros do robo
+#define a1 15
+#define a2 45
+#define a3 83
+#define h 85
 
 //angulo objetivo
 angle_t Angulo;
@@ -52,6 +51,7 @@ angle_t Angulo;
 robot_angles_t Ang_Atual;
 position_t Pos_Atual;
 angle_t Garra_Atual;
+robot_angles_t Ang_Mandar;
 
 
 void pos_inicial(void){
@@ -172,6 +172,11 @@ void pos_inicial(void){
 	G_queue1.enqueue(Garra_Atual);
 }
 
+bool anguloValido(int anguloServo) {}
+	if (anguloServo >= 180 || anguloServo <= 0)
+    	return false;
+    else
+    	return true;
 
 
 bool Move(angle_t Angulo,joint_t JUNTA){
@@ -180,6 +185,9 @@ bool Move(angle_t Angulo,joint_t JUNTA){
     else {
 		servo_angle = jointConversion[JUNTA](Angulo);
     }
+    //limita a movimentacao, por seguranca
+    if (!anguloValido(servo_angle))
+    	return false;
 	jointServo[JUNTA].slowmove(servo_angle, SPEED);
 	return true;
 }
@@ -189,6 +197,10 @@ void MoveTudo(void){
 	int S_Junta2 = Serial.parseInt();
 	int S_Junta3 = Serial.parseInt();
 	int S_Garra  = Serial.parseInt();
+
+	// Se a posicao e invalida, nem manda ir!
+	if (!anguloValido(jointConversion[JUNTA_1](S_Junta1)) || !anguloValido(jointConversion[JUNTA_2](S_Junta2)) || !anguloValido(jointConversion[JUNTA_3](S_Junta3)) || !anguloValido(S_Garra))
+		return;
 
 	if(S_Junta1>=-89 && S_Junta1 <=91){
 		Move(S_Junta1,JUNTA_1);
@@ -252,170 +264,211 @@ void COMUNICACAO(){
 
 	switch(comando){
 		case Junta1:
-		Angulo = (angle_t)Serial.parseInt();
-		if(Angulo<=MAX_ANGLE_1 || Angulo >=MIN_ANGLE_1){
-			Serial.println("Theta1 ERROR");
+			Angulo = (angle_t)Serial.parseInt();
+			if(Angulo<=MAX_ANGLE_1 || Angulo >=MIN_ANGLE_1){
+				Serial.println("Theta2 ERROR");
+				break;
+			}
+			Move(Angulo,JUNTA_1);
+			Ang_Atual.theta_1 = Angulo;
+			Serial.println("Theta2 alterada");
 			break;
-		}
-		Move(Angulo,JUNTA_1);
-		Ang_Atual.theta_1 = Angulo;
-		Serial.println("Theta1 alterada");
-		break;
 
 		case Junta2:
-		Angulo = (angle_t)Serial.parseInt();
-		if(Angulo<=MAX_ANGLE_2 || Angulo >=MIN_ANGLE_2){
-			Serial.println("Theta2 ERROR");
+			Angulo = (angle_t)Serial.parseInt();
+			if(Angulo<=MAX_ANGLE_2 || Angulo >=MIN_ANGLE_2){
+				Serial.println("Theta2 ERROR");
+				break;
+			}
+			Move(Angulo,JUNTA_2);
+			Ang_Atual.theta_2 = Angulo;
+			Serial.println("Theta2 alterada");
 			break;
-		}
-		Move(Angulo,JUNTA_2);
-		Ang_Atual.theta_2 = Angulo;
-		Serial.println("Theta2 alterada");
-		break;
 
 		case Junta3:
-		Angulo = (angle_t)Serial.parseInt();
-		if(Angulo<=MAX_ANGLE_3 || Angulo >=MIN_ANGLE_3){
-			Serial.println("Theta3 ERROR");
+			Angulo = (angle_t)Serial.parseInt();
+			if(Angulo<=MAX_ANGLE_3 || Angulo >=MIN_ANGLE_3){
+				Serial.println("Theta3 ERROR");
+				break;
+			}
+			Move(Angulo,JUNTA_3);
+			Ang_Atual.theta_3 = Angulo;
+			Serial.println(Theta3 alterada");
 			break;
-		}
-		Move(Angulo,JUNTA_3);
-		Ang_Atual.theta_3 = Angulo;
-		Serial.println("Theta3 alterada");
-		break;
 
 		case Garra:
-		Angulo = (angle_t)Serial.parseInt();
-		if(Angulo<=25 || Angulo >=60){
-			Serial.println("garra ERROR");
+			Angulo = (angle_t)Serial.parseInt();
+			if(Angulo<=25 || Angulo >=60){
+				Serial.println("garra ERROR");
+				break;
+			}
+			Move(Angulo,CLAW);
+			Garra_Atual=Angulo;
+			Serial.println("garra alterada");
 			break;
-		}
-		Move(Angulo,CLAW);
-		Garra_Atual=Angulo;
-		Serial.println("garra alterada");
-		break;
 
 		case Save:
-		if(saves==15){
-			Serial.println("fila cheia");
+			if(saves==15){
+				Serial.println("fila cheia");
+				break;
+			}
+    		saves++;
+    		A_queue1.enqueue(Ang_Atual);
+			G_queue1.enqueue(Garra_Atual);
+			Serial.print(saves);
+    		Serial.println(" movimento(s) salvo(s)");
 			break;
-		}
-    	saves++;
-    	A_queue1.enqueue(Ang_Atual);
-		G_queue1.enqueue(Garra_Atual);
-		Serial.print(saves);
-    	Serial.println(" movimento(s) salvo(s)");
-		break;
 
 		case Start:
-    	Serial.println("Start moves");
-		while(stop!=404){
-			if (Serial.available() > 0){
-				stop = Serial.parseInt();
-			}
-			while (!A_queue1.isEmpty ()){
-				if(A_queue1.isEmpty())break;
-				// Serial.print("A_queue1.theta_1 = ");
-				// Serial.println(A_queue1.front().theta_1);
-				// Serial.print("A_queue1.theta_2 = ");
-				// Serial.println(A_queue1.front().theta_2);
-				// Serial.print("A_queue1.theta_3 = ");
-				// Serial.println(A_queue1.front().theta_3);
-				// Serial.print("Garra = ");
-				// Serial.println(G_queue1.front());
-				Move(A_queue1.front().theta_1,JUNTA_1);
-        		delay(15);
-				Move(A_queue1.front().theta_2,JUNTA_2);
-        		delay(15);
-				Move(A_queue1.front().theta_3,JUNTA_3);
-        		delay(15);
-    			A_queue2.enqueue(A_queue1.dequeue());
-        		delay(15);
-				Move(G_queue1.front(),CLAW);
-        		delay(15);
-    			G_queue2.enqueue(G_queue1.dequeue());
-        		delay(1500);
- 			}
-			while (!A_queue2.isEmpty ()){
-    			//Serial.print (queue.front ());
-    			A_queue1.enqueue(A_queue2.dequeue());
-				G_queue1.enqueue(G_queue2.dequeue());
- 			}
- 		}
-		stop=0;
- 		Serial.println("Stop moves");
-		break;
+	    	Serial.println("Start moves");
+			while(stop!=404){
+				if (Serial.available() > 0){
+					stop = Serial.parseInt();
+				}
+				while (!A_queue1.isEmpty ()){
+					if(A_queue1.isEmpty())break;
+					// Serial.print("A_queue1.theta_1 = ");
+					// Serial.println(A_queue1.front().theta_1);
+					// Serial.print("A_queue1.theta_2 = ");
+					// Serial.println(A_queue1.front().theta_2);
+					// Serial.print("A_queue1.theta_3 = ");
+					// Serial.println(A_queue1.front().theta_3);
+					// Serial.print("Garra = ");
+					// Serial.println(G_queue1.front());
+					Move(A_queue1.front().theta_1,JUNTA_1);
+	        delay(15);
+					Move(A_queue1.front().theta_2,JUNTA_2);
+	        delay(15);
+					Move(A_queue1.front().theta_3,JUNTA_3);
+	        delay(15);
+	    		A_queue2.enqueue(A_queue1.dequeue());
+	        delay(15);
+					Move(G_queue1.front(),CLAW);
+	        delay(15);
+	    		G_queue2.enqueue(G_queue1.dequeue());
+	        delay(1500);
+	 			}
+				while (!A_queue2.isEmpty ()){
+	    			//Serial.print (queue.front ());
+	    			A_queue1.enqueue(A_queue2.dequeue());
+					G_queue1.enqueue(G_queue2.dequeue());
+	 			}
+	 		}
+			stop=0;
+	 		Serial.println("Stop moves");
+			break;
 
 		case Reset:
-		Serial.println("Reset moves");
-		//esvazia queue
-		while (!A_queue1.isEmpty ()){
-    		A_queue1.dequeue();
-			G_queue1.dequeue();
- 		}
-    	saves=0;
-		break;
+			Serial.println("Reset moves");
+			//esvazia queue
+			while (!A_queue1.isEmpty ()){
+	    		A_queue1.dequeue();
+				G_queue1.dequeue();
+	 		}
+	    	saves=0;
+			break;
 
 		case X_more:
-		Serial.println("move + X");
-		//acrescenta em X
-		break;
+			Serial.println("move + X");
+			//acrescenta em X
+			Pos_Atual.x += DELTA;
+			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
+			// Se a posicao e invalida, nem manda ir!
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+				Serial.println("Limite fisico atingido.");
+				Pos_Atual.x -= DELTA;
+				return;
+			break;
 
 		case X_less:
-		Serial.println("move - X");
-		//diminui em X
-		break;
+			Serial.println("move - X");
+			//diminui em X
+			Pos_Atual.x -= DELTA;
+			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
+			// Se a posicao e invalida, nem manda ir!
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+				Serial.println("Limite fisico atingido.");
+				Pos_Atual.x += DELTA;
+				return;
+			break;
 		
 		case Y_more:
-		Serial.println("move + Y");
-		//acrescenta em Y
-		break;
+			Serial.println("move + Y");
+			//acrescenta em Y
+			Pos_Atual.y += DELTA;
+			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
+			// Se a posicao e invalida, nem manda ir!
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+				Serial.println("Limite fisico atingido.");
+				Pos_Atual.y -= DELTA;
+				return;
+			break;
 
 		case Y_less:
-		Serial.println("move -Y");
-		//diminui em Y
-		break;
+			Serial.println("move -Y");
+			//diminui em Y
+			Pos_Atual.y -= DELTA;
+			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
+			// Se a posicao e invalida, nem manda ir!
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+				Serial.println("Limite fisico atingido.");
+				Pos_Atual.y += DELTA;
+				return;
+			break;
 
 		case Z_more:
-		Serial.println("move + Z");
-		//acrescenta em Z
-		break;
+			Serial.println("move + Z");
+			//acrescenta em Z
+			Pos_Atual.z += DELTA;
+			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
+			// Se a posicao e invalida, nem manda ir!
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+				Serial.println("Limite fisico atingido.");
+				Pos_Atual.z -= DELTA;
+				ret
 
 		case Z_less:
-		Serial.println("move - Z");
-		//acrescenta em Z
-		break;
+			Serial.println("move - Z");
+			//diminui em Z
+			Pos_Atual.z -= DELTA;
+			Ang_Mandar = inverse_kinematics(h, a1, a2, a3, Pos_Atual, ELBOW_UP);
+			// Se a posicao e invalida, nem manda ir!
+			if (!anguloValido(jointConversion[JUNTA_1](Ang_Mandar.theta_1)) || !anguloValido(jointConversion[JUNTA_2](Ang_Mandar.theta_2)) || !anguloValido(jointConversion[JUNTA_3](Ang_Mandar.theta_3)))
+				Serial.println("Limite fisico atingido.");
+				Pos_Atual.z += DELTA;
+				return;
+			break;
 
 		case Print_pos:
-		Serial.print("Pos x = ");
-		Serial.println(Pos_Atual.x);
-		Serial.print("Pos y = ");
-		Serial.println(Pos_Atual.y);
-		Serial.print("Pos z = ");
-		Serial.println(Pos_Atual.z);
-		break;
+			Serial.print("Pos x = ");
+			Serial.println(Pos_Atual.x);
+			Serial.print("Pos y = ");
+			Serial.println(Pos_Atual.y);
+			Serial.print("Pos z = ");
+			Serial.println(Pos_Atual.z);
+			break;
 
 		case Print_ang:
-		Serial.print("Theta1 = ");
-		Serial.println(Ang_Atual.theta_1);
-		Serial.print("Theta2 = ");
-		Serial.println(Ang_Atual.theta_2);
-		Serial.print("Theta3 = ");
-		Serial.println(Ang_Atual.theta_3);
-		Serial.print("Garra = ");
-		Serial.println(Garra_Atual);
-		break;
+			Serial.print("Junta 1 = ");
+			Serial.println(Ang_Atual.theta_1);
+			Serial.print("Junta 2 = ");
+			Serial.println(Ang_Atual.theta_2);
+			Serial.print("Junta 3 = ");
+			Serial.println(Ang_Atual.theta_3);
+			Serial.print("Garra = ");
+			Serial.println(Garra_Atual);
+			break;
 
 	case MoveAngulos:
-    Serial.print("Erros ");
+    	Serial.print("Erros ");
 		MoveTudo();
-	break;
+		break;
 
     case 404:
-    Serial.println("Stop moves");
-    break;
+    	Serial.println("Stop moves");
+    	break;
     
-		default:
+	default:
 		//Serial.println("COMANDO LIBERADO");
 		break;
 	}
@@ -424,7 +477,7 @@ void COMUNICACAO(){
 }
 
 void setup() {
-	//inisia serial
+	//inicia serial
 	Serial.begin(9600);
   	// set the printer of the queue.
   	A_queue1.setPrinter (Serial);
