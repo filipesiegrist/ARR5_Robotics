@@ -8,7 +8,6 @@
 #include <ARR5_Inverse_Kinematics.h>
 
 #include <VarSpeedServo.h>
-#include <ARR5_Angle_Conversions.h>
 #include <QueueArray.h>
 
 QueueArray <robot_angles_t> A_queue1;
@@ -34,7 +33,7 @@ int (*jointConversion[3])(angle_t a) = {
 
 VarSpeedServo jointServo[4];   // create servo object to control a servo
 
-#define SPEED 100
+#define SPEED 120
 
 //SERVOS PINS
 int jointPin[4] = {8,10,9,7};
@@ -71,25 +70,25 @@ void MoveTudo(void){
 	int S_Junta3 = Serial.parseInt();
 	int S_Garra  = Serial.parseInt();
 
-	if(S_Junta1>-89 && S_Junta1 <91){
+	if(S_Junta1>=-89 && S_Junta1 <=91){
 		Move(S_Junta1,JUNTA_1);
 		Ang_Atual.theta_1 = S_Junta1;
 	}
 	else Serial.print("J1 ");
 
-	if(S_Junta2>-32 && S_Junta2 <112){
+	if(S_Junta2>=-32 && S_Junta2 <=112){
 		Move(S_Junta2,JUNTA_2);
 		Ang_Atual.theta_2 = S_Junta2;
 	}
 	else Serial.print("J2 ");
 
-	if(S_Junta3>-94.5 && S_Junta3 <67.5){
+	if(S_Junta3>=-94.5 && S_Junta3 <=67.5){
 		Move(S_Junta3,JUNTA_3);
 		Ang_Atual.theta_3 = S_Junta3;
 	}
 	else Serial.print("J3 ");
 
-	if(S_Garra>25 && S_Garra <60){
+	if(S_Garra>=25 && S_Garra <=60){
 		Move(S_Garra,CLAW);
 		Garra_Atual=S_Garra;
 	}
@@ -205,11 +204,17 @@ void COMUNICACAO(){
 				// Serial.print("Garra = ");
 				// Serial.println(G_queue1.front());
 				Move(A_queue1.front().theta_1,JUNTA_1);
+        delay(15);
 				Move(A_queue1.front().theta_2,JUNTA_2);
+        delay(15);
 				Move(A_queue1.front().theta_3,JUNTA_3);
-    			A_queue2.enqueue(A_queue1.dequeue());
+        delay(15);
+    		A_queue2.enqueue(A_queue1.dequeue());
+        delay(15);
 				Move(G_queue1.front(),CLAW);
-    			G_queue2.enqueue(G_queue1.dequeue());
+        delay(15);
+    		G_queue2.enqueue(G_queue1.dequeue());
+        delay(1500);
  			}
 			while (!A_queue2.isEmpty ()){
     			//Serial.print (queue.front ());
