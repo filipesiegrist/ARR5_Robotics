@@ -54,6 +54,126 @@ position_t Pos_Atual;
 angle_t Garra_Atual;
 
 
+void pos_inicial(void){
+	// movimeno 1
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+
+		Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = 0.00;
+	Ang_Atual.theta_3 = 2.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 3
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = -0.00;
+	Ang_Atual.theta_3 = 2.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+
+
+	// movimeno 4
+	Ang_Atual.theta_1 = 0;
+	Ang_Atual.theta_2 = 40.00;
+	Ang_Atual.theta_3 = -35.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 5
+	Ang_Atual.theta_1 = 80;
+	Ang_Atual.theta_2 = 40.00;
+	Ang_Atual.theta_3 = -35.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 6
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -27.00;
+	Ang_Atual.theta_3 = 25.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 7
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -27.00;
+	Ang_Atual.theta_3 = 25.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 8
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	///////////////////////////////
+		// movimeno 1
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 2
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = -20.00;
+	Ang_Atual.theta_3 = 20.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 3
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = -20.00;
+	Ang_Atual.theta_3 = 20.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 4
+	Ang_Atual.theta_1 = 0;
+	Ang_Atual.theta_2 = 0.00;
+	Ang_Atual.theta_3 = 42.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 5
+	Ang_Atual.theta_1 = 80;
+	Ang_Atual.theta_2 = 0.00;
+	Ang_Atual.theta_3 = 42.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 6
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -30.00;
+	Ang_Atual.theta_3 = 42.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 7
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -30.00;
+	Ang_Atual.theta_3 = 42.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 8
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+}
+
+
+
 bool Move(angle_t Angulo,joint_t JUNTA){
 	int servo_angle;
 	if (JUNTA == CLAW)servo_angle = (int)Angulo;
@@ -74,19 +194,19 @@ void MoveTudo(void){
 		Move(S_Junta1,JUNTA_1);
 		Ang_Atual.theta_1 = S_Junta1;
 	}
-	else Serial.print("J1 ");
+	else Serial.print("t1 ");
 
 	if(S_Junta2>=-32 && S_Junta2 <=112){
 		Move(S_Junta2,JUNTA_2);
 		Ang_Atual.theta_2 = S_Junta2;
 	}
-	else Serial.print("J2 ");
+	else Serial.print("t2 ");
 
 	if(S_Junta3>=-94.5 && S_Junta3 <=67.5){
 		Move(S_Junta3,JUNTA_3);
 		Ang_Atual.theta_3 = S_Junta3;
 	}
-	else Serial.print("J3 ");
+	else Serial.print("t3 ");
 
 	if(S_Garra>=25 && S_Garra <=60){
 		Move(S_Garra,CLAW);
@@ -134,34 +254,34 @@ void COMUNICACAO(){
 		case Junta1:
 		Angulo = (angle_t)Serial.parseInt();
 		if(Angulo<=MAX_ANGLE_1 || Angulo >=MIN_ANGLE_1){
-			Serial.println("junta 1 ERROR");
+			Serial.println("Theta1 ERROR");
 			break;
 		}
 		Move(Angulo,JUNTA_1);
 		Ang_Atual.theta_1 = Angulo;
-		Serial.println("junta 1 alterada");
+		Serial.println("Theta1 alterada");
 		break;
 
 		case Junta2:
 		Angulo = (angle_t)Serial.parseInt();
 		if(Angulo<=MAX_ANGLE_2 || Angulo >=MIN_ANGLE_2){
-			Serial.println("junta 2 ERROR");
+			Serial.println("Theta2 ERROR");
 			break;
 		}
 		Move(Angulo,JUNTA_2);
 		Ang_Atual.theta_2 = Angulo;
-		Serial.println("junta 2 alterada");
+		Serial.println("Theta2 alterada");
 		break;
 
 		case Junta3:
 		Angulo = (angle_t)Serial.parseInt();
 		if(Angulo<=MAX_ANGLE_3 || Angulo >=MIN_ANGLE_3){
-			Serial.println("junta 3 ERROR");
+			Serial.println("Theta3 ERROR");
 			break;
 		}
 		Move(Angulo,JUNTA_3);
 		Ang_Atual.theta_3 = Angulo;
-		Serial.println("junta 3 alterada");
+		Serial.println("Theta3 alterada");
 		break;
 
 		case Garra:
@@ -204,17 +324,17 @@ void COMUNICACAO(){
 				// Serial.print("Garra = ");
 				// Serial.println(G_queue1.front());
 				Move(A_queue1.front().theta_1,JUNTA_1);
-        delay(15);
+        		delay(15);
 				Move(A_queue1.front().theta_2,JUNTA_2);
-        delay(15);
+        		delay(15);
 				Move(A_queue1.front().theta_3,JUNTA_3);
-        delay(15);
-    		A_queue2.enqueue(A_queue1.dequeue());
-        delay(15);
+        		delay(15);
+    			A_queue2.enqueue(A_queue1.dequeue());
+        		delay(15);
 				Move(G_queue1.front(),CLAW);
-        delay(15);
-    		G_queue2.enqueue(G_queue1.dequeue());
-        delay(1500);
+        		delay(15);
+    			G_queue2.enqueue(G_queue1.dequeue());
+        		delay(1500);
  			}
 			while (!A_queue2.isEmpty ()){
     			//Serial.print (queue.front ());
@@ -276,11 +396,11 @@ void COMUNICACAO(){
 		break;
 
 		case Print_ang:
-		Serial.print("Junta 1 = ");
+		Serial.print("Theta1 = ");
 		Serial.println(Ang_Atual.theta_1);
-		Serial.print("Junta 2 = ");
+		Serial.print("Theta2 = ");
 		Serial.println(Ang_Atual.theta_2);
-		Serial.print("Junta 3 = ");
+		Serial.print("Theta3 = ");
 		Serial.println(Ang_Atual.theta_3);
 		Serial.print("Garra = ");
 		Serial.println(Garra_Atual);
@@ -315,6 +435,8 @@ void setup() {
 	jointServo[JUNTA_3].attach(jointPin[JUNTA_3]);
 	jointServo[CLAW].attach(jointPin[CLAW]);
 	//posicao inicial
+	saves=15;
+	pos_inicial();
 	Ang_Atual.theta_1 = 0;
 	Ang_Atual.theta_2 = 0;
 	Ang_Atual.theta_3 = 0;
@@ -323,6 +445,7 @@ void setup() {
 	Move(Ang_Atual.theta_2,JUNTA_2);
 	Move(Ang_Atual.theta_3,JUNTA_3);
 	Move(Garra_Atual,CLAW);
+
 }
 
 void loop() {

@@ -1,46 +1,115 @@
-Junta 1 = -45.00
-Junta 2 = -20.00
-Junta 3 = 20.00
-Garra = 60.00
+	// movimeno 1
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
 
-Junta 1 = -45.00
-Junta 2 = -20.00
-Junta 3 = 20.00
-Garra = 30.00
+		Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = 0.00;
+	Ang_Atual.theta_3 = 2.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 3
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = -0.00;
+	Ang_Atual.theta_3 = 2.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
 
-Junta 1 = 0.00
-Junta 2 = 20.00
-Junta 3 = -15.00
-Garra = 30.00
 
-Junta 1 = 30.00
-Junta 2 = -15.00
-Junta 3 = 30.00
-Garra = 30.00
-
-Junta 1 = 76.00
-Junta 2 = -30.00
-Junta 3 = 35.00
-Garra = 30.00
-
-//////
-Junta 1 = 76.00
-Junta 2 = -30.00
-Junta 3 = 35.00
-Garra = 60.00
-
-Junta 1 = 76.00
-Junta 2 = 30.00
-Junta 3 = 35.00
-Garra = 60.00
-
-Junta 1 = 0.00
-Junta 2 = 30.00
-Junta 3 = -35.00
-Garra = 60.00
-
-Junta 1 = 0.00
-Junta 2 = 30.00
-Junta 3 = -35.00
-Garra = 60.00
-
+	// movimeno 4
+	Ang_Atual.theta_1 = 0;
+	Ang_Atual.theta_2 = 40.00;
+	Ang_Atual.theta_3 = -35.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 5
+	Ang_Atual.theta_1 = 80;
+	Ang_Atual.theta_2 = 40.00;
+	Ang_Atual.theta_3 = -35.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 6
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -27.00;
+	Ang_Atual.theta_3 = 25.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 7
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -27.00;
+	Ang_Atual.theta_3 = 25.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 8
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	///////////////////////////////
+		// movimeno 1
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 2
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = -20.00;
+	Ang_Atual.theta_3 = 20.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 3
+	Ang_Atual.theta_1 = -38.00;
+	Ang_Atual.theta_2 = -20.00;
+	Ang_Atual.theta_3 = 20.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 4
+	Ang_Atual.theta_1 = 0;
+	Ang_Atual.theta_2 = 40.00;
+	Ang_Atual.theta_3 = -35.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 5
+	Ang_Atual.theta_1 = 80;
+	Ang_Atual.theta_2 = 40.00;
+	Ang_Atual.theta_3 = -35.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 6
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -7.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=30.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 7
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = -7.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
+	// movimeno 8
+	Ang_Atual.theta_1 = 80.00;
+	Ang_Atual.theta_2 = 30.00;
+	Ang_Atual.theta_3 = 10.00;
+	Garra_Atual=60.00;
+	A_queue1.enqueue(Ang_Atual);
+	G_queue1.enqueue(Garra_Atual);
